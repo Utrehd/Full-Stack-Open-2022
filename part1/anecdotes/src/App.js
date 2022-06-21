@@ -3,6 +3,28 @@ import React from 'react';
 
 const Button = ({handleClick, text}) => <button onClick={handleClick}>{text}</button>
 const H2Text = ({text}) => <h2>{text}</h2>
+const H4Text = ({text}) => <h4>{text}</h4>
+const MostVoted = ({votes, anecdotes}) => {
+  // console.log('votes: ', votes)
+  // console.log('votes: ', Object.values(votes))
+  const arrVotes = Object.values(votes)
+  let max = Math.max(...arrVotes)
+  // console.log('max: ', max)
+  let index = arrVotes.indexOf(max)
+  // console.log('index: ', index)
+  if (max <= 0){
+    return(
+      <H4Text text={'No votes given.'}/>
+    )
+  }
+
+  return(
+    <div>
+      <H4Text text={anecdotes[index]}/>
+      <H4Text text={'has ' + arrVotes[index] + ' votes'}/>
+    </div>
+  )
+}
 
 const App = () => {
   const anecdotes = [
@@ -16,13 +38,13 @@ const App = () => {
   ]
   
   const [selected, setSelected] = useState(0)
-  const [votes, setVotes] = useState([0,0,0,0,0,0,0]) 
+  const [votes, setVotes] = useState([0,0,0,0,0,0,0])
 
   const random = () => Math.floor(Math.random() * anecdotes.length)
   const randomAnecdote = () => setSelected(random)
 
   const voteAnecdote = () => {
-    const newVotes = { ...votes}
+    const newVotes = {...votes}
     newVotes[selected] += 1
     setVotes(newVotes)
   }
@@ -31,10 +53,13 @@ const App = () => {
   return (
     <React.StrictMode>
       <div>
-        <H2Text text={anecdotes[selected]}/>
-        <H2Text text={'has ' + votes[selected] + ' votes'}/>
+        <H2Text text={'Anecdote of the day'}/>
+        <H4Text text={anecdotes[selected]}/>
+        <H4Text text={'has ' + votes[selected] + ' votes'}/>
         <Button text={'vote for anecdote'} handleClick={voteAnecdote}/>
         <Button text={'next anecdote'} handleClick={() => randomAnecdote()}/>
+        <H2Text text={'Anecdote with most votes'}/>
+        <MostVoted votes={votes} anecdotes={anecdotes}/>
       </div>
     </React.StrictMode>
   )
