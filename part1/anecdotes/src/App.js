@@ -1,4 +1,8 @@
 import { useState } from 'react'
+import React from 'react';
+
+const Button = ({handleClick, text}) => <button onClick={handleClick}>{text}</button>
+const H2Text = ({text}) => <h2>{text}</h2>
 
 const App = () => {
   const anecdotes = [
@@ -12,11 +16,16 @@ const App = () => {
   ]
    
   const [selected, setSelected] = useState(0)
-
+  const random = () => Math.floor(Math.random() * anecdotes.length)
+  const randomAnecdote = () => setSelected(random)
+  console.log('random number: ', selected)
   return (
-    <div>
-      {anecdotes[selected]}
-    </div>
+    <React.StrictMode>
+      <div>
+        <H2Text text={anecdotes[selected]}/>
+        <Button text={'next anecdote'} handleClick={() => randomAnecdote()}/>
+      </div>
+    </React.StrictMode>
   )
 }
 
