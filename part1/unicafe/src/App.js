@@ -8,7 +8,7 @@ const App = () => {
   const [good, setGood] = useState(0)
   const [neutral, setNeutral] = useState(0)
   const [bad, setBad] = useState(0)
-
+  const total = good + neutral + bad
   const incrementValue = (parameter, update) => update(parameter + 1)
  //<Button handleClick={incrementValue(good, setGood)} text={'Vote for Good'}/>
   return (
@@ -21,6 +21,9 @@ const App = () => {
       <LabeldValue text={'Good'} value={good}/>
       <LabeldValue text={'Neutral'} value={neutral}/>
       <LabeldValue text={'Bad'} value={bad}/>
+      <LabeldValue text={'Total'} value={total}/>
+      <LabeldValue text={'Average'} value={(good-bad)/total}/>
+      <LabeldValue text={'Positive Rate'} value={100/total*good}/>
     </div>
   )
 }
