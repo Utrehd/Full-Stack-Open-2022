@@ -15,6 +15,42 @@ const App = () => {
   const [newMobile, setNewMobile] = useState('')
   const [query, setQuery] = useState('')
 
+  const addPerson = (event) => {
+    event.preventDefault()
+    const exists = Object.values(persons).some((person) => {
+      return person.name === newName
+    })
+    if (exists)
+    {
+      alert(`${newName} is already added to phonebook`)
+      return
+    }
+
+    const newPerson = {
+        name: newName,
+        mobile: newMobile
+    }
+
+    setPersons(persons.concat(newPerson))
+    setNewName('')
+    setNewMobile('')
+  }
+
+  const handleNameChange = (event) => {
+    console.log(event.target.value)
+    setNewName(event.target.value)
+  }
+
+  const handleMobileChange = (event) => {
+    console.log(event.target.value)
+    setNewMobile(event.target.value)
+  }
+
+  const handleQuery = (event) => {
+    console.log(event.target.value)
+    setQuery(event.target.value)
+  }
+
   function filterPersons(query, per){
     if (query === ''){
       return per
@@ -37,9 +73,15 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
-      <QueryField query={query} setQuery={setQuery}/>
+      <QueryField query={query} handleQuery={handleQuery}/>
       <h2>Add a New Person</h2>
-      <AddPersonForm persons={persons} setPersons={setPersons} newName={newName} setNewName={setNewName} newMobile={newMobile} setNewMobile={setNewMobile}/>
+      <AddPersonForm 
+        addPerson={addPerson} 
+        newName={newName} 
+        handleNameChange={handleNameChange} 
+        newMobile={newMobile} 
+        handleMobileChange={handleMobileChange}
+      />
       <h2>Found Persons</h2>
       <PersonsList persons={filterPersons(query, persons)}/>
     </div>

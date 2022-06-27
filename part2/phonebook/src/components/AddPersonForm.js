@@ -3,38 +3,7 @@ import InputField from './InputField'
 
 
 
-const AddPersonForm = ({persons, setPersons, newName, setNewName, newMobile, setNewMobile}) => {
-
-  const addPerson = (event) => {
-    event.preventDefault()
-    const exists = Object.values(persons).some((person) => {
-      return person.name === newName
-    })
-    if (exists)
-    {
-      alert(`${newName} is already added to phonebook`)
-      return
-    }
-
-    const newPerson = {
-        name: newName,
-        mobile: newMobile
-    }
-
-    setPersons(persons.concat(newPerson))
-    setNewName('')
-    setNewMobile('')
-  }
-
-  const handleNameChange = (event) => {
-    console.log(event.target.value)
-    setNewName(event.target.value)
-  }
-
-  const handleMobileChange = (event) => {
-    console.log(event.target.value)
-    setNewMobile(event.target.value)
-  }
+const AddPersonForm = ({addPerson, newName, handleNameChange, newMobile, handleMobileChange}) => {
 
   return (
     <div>
