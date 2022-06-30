@@ -3,13 +3,11 @@ import Person from './Person'
 
 const PersonsList = ({persons}) => {
   return (
-    <div>
+    <ul>
         {persons.map((person) => (
-        <div>
-          <Person person={person}/>
-        </div>
+          <Person key={person.name} person={person}/>
       ))}
-    </div>
+    </ul>
   )
 }
 
