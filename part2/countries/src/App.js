@@ -47,7 +47,7 @@ const App = () => {
       <h2>Find Countries</h2>
       <QueryField query={query} handleQuery={handleQuery}/>
       <h2>Found Countries</h2>
-      <CountryDisplay countries={filterCountries(query, countries)}/>
+      <CountryDisplay countries={filterCountries(query, countries)} handlerButton={handleQuery}/>
     </div>
   )
 }
