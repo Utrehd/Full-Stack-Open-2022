@@ -26,13 +26,14 @@ const CountrySpecification = ({country}) => {
   }, [])
 
   let elements = (<div>No data found</div>)
-  
+
   if(Object.keys(weather).length > 0){
     elements = (
       <div>
         <h2>Weather in Helsinki</h2>
         <div>Temperature: {weather.main.temp}</div>
         <div><img alt="Weather Icon" src={`http://openweathermap.org/img/w/${weather.weather[0].icon}.png`}/></div>
+        <div>Wind: {weather.wind.speed} m/s</div>
       </div>
     )
   }
