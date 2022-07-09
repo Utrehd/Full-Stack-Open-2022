@@ -1,11 +1,11 @@
-const Notification = ({ message, setMessage }) => {
+const Notification = ({ message, setMessage , messageType='notification'}) => {
     console.log('msg for Notification:', message)
     if (message === '') {
       return null
     }
-    setTimeout(function(){setMessage('');},2000); 
+    setTimeout(function(){setMessage('');},3000); 
     return (
-      <div className='notification'>
+      <div className={messageType}>
         {message}
       </div>
     )

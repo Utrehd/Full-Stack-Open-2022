@@ -13,7 +13,7 @@ const App = () => {
   const [newMobile, setNewMobile] = useState('')
   const [query, setQuery] = useState('')
   const [notificationMessage, setNotificationMessage] = useState('')
-
+  const [messageType, setMessageType] = useState('')
 
   useEffect(() => {
     console.log('effect')
@@ -28,7 +28,7 @@ const App = () => {
 
   const addPerson = (event) => {
     event.preventDefault()
-    const oldPerson = persons.find(person => person.name === newName)
+    const oldPerson = persons.find(person => person.name.toLowerCase() === newName.toLowerCase())
     if (oldPerson)
     {
       const question = window.confirm(`${newName} is already added to phonebook, do you want to replace his phone number?`)
@@ -40,10 +40,13 @@ const App = () => {
         .update(oldPerson.id, changedPerson)
         .then(returnedPerson => {
           setPersons(persons.map(person => person.id !== oldPerson.id ? person : returnedPerson))
+          setMessageType('notification')
           setNotificationMessage(`The phone number of ${changedPerson.name} was updated with ${changedPerson.mobile}`)
           setNewName('')
           setNewMobile('')
-        })
+        }).catch(error =>{        
+          setMessageType('error')
+          setNotificationMessage(`The Person '${changedPerson.name}' was already deleted from server`)})
       }
       return
     }
@@ -52,6 +55,7 @@ const App = () => {
       .create(newPerson)
       .then(returnedNote => {
         setPersons(persons.concat(returnedNote))
+        setMessageType('notification')
         setNotificationMessage(`${newPerson.name} was added with the number: ${newPerson.mobile}` )
         setNewName('')
         setNewMobile('')
@@ -97,12 +101,12 @@ const App = () => {
     PersonService
       .remove(id)
       .then(returnedNote => {console.log(returnedNote)
+        setMessageType('Notification')
         setNotificationMessage(`${person.name} was removed` )
         setPersons(persons.filter(n => n.id !== id))
       }).catch(error => {
-      alert(
-        `The Person '${person.content}' was already deleted from server`
-      )
+        setMessageType('error')
+        setNotificationMessage(`The Person '${person.content}' was already deleted from server`)
     })
   }
 
@@ -110,7 +114,7 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
-      <Notification message={notificationMessage} setMessage={setNotificationMessage}/>
+      <Notification message={notificationMessage} setMessage={setNotificationMessage} messageType={messageType}/>
       <QueryField query={query} handleQuery={handleQuery}/>
       <h2>Add a New Person</h2>
       <AddPersonForm 
