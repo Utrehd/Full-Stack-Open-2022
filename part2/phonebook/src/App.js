@@ -25,19 +25,25 @@ const App = () => {
 
   const addPerson = (event) => {
     event.preventDefault()
-    const exists = Object.values(persons).some((person) => {
-      return person.name === newName
-    })
-    if (exists)
+    const oldPerson = persons.find(person => person.name === newName)
+    if (oldPerson)
     {
-      alert(`${newName} is already added to phonebook`)
+      const question = window.confirm(`${newName} is already added to phonebook, do you want to replace his phone number?`)
+      if(question){
+        
+        const changedPerson = { ...oldPerson, mobile: newMobile}
+        console.log('the person change', changedPerson)
+        PersonService
+        .update(oldPerson.id, changedPerson)
+        .then(returnedPerson => {
+          setPersons(persons.map(person => person.id !== oldPerson.id ? person : returnedPerson))
+          setNewName('')
+          setNewMobile('')
+        })
+      }
       return
     }
-
-    const newPerson = {
-        name: newName,
-        mobile: newMobile
-    }
+    const newPerson = {name: newName, mobile: newMobile}
     PersonService
       .create(newPerson)
       .then(returnedNote => {
@@ -63,23 +69,38 @@ const App = () => {
   }
 
   function filterPersons(query, per){
-    if (query === ''){
-      return per
-    }
+    if (query === ''){return per}
     
     let newPersons = []
     per.map(person => {
       if (person.name.toLowerCase().includes(query.toLowerCase())){
-          const newPerson = {
-            name: person.name,
-            mobile: person.mobile
-        }
+          const newPerson = {...person}
         newPersons = newPersons.concat(newPerson) 
       }
       return newPersons
     })
+    console.log('Persons after filter', persons)
     return newPersons
   }
+
+
+  const removePerson = (id) => {
+    console.log(`Try delete person with ${id}.`)
+    const person = persons.find(n => n.id === id)
+    //const changedNote = { ...persons, important: !note.important }
+
+    PersonService
+      .remove(id)
+      .then(returnedNote => {console.log(returnedNote)
+        //setPersons(persons.concat(returnedNote))
+        setPersons(persons.filter(n => n.id !== id))
+      }).catch(error => {
+      alert(
+        `The Person '${person.content}' was already deleted from server`
+      )
+    })
+  }
+
 
   return (
     <div>
@@ -94,7 +115,7 @@ const App = () => {
         handleMobileChange={handleMobileChange}
       />
       <h2>Found Persons</h2>
-      <PersonsList persons={filterPersons(query, persons)}/>
+      <PersonsList persons={filterPersons(query, persons)} handlerRemove={removePerson} label={'Delete'}/>
     </div>
   )
 }
