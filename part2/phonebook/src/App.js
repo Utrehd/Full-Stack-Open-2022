@@ -3,6 +3,7 @@ import PersonsList from './components/PersonsList'
 import AddPersonForm from './components/AddPersonForm'
 import QueryField from './components/QueryField'
 import axios from 'axios'
+import PersonService from './service/persons'
 
 
 const App = () => {
@@ -37,10 +38,13 @@ const App = () => {
         name: newName,
         mobile: newMobile
     }
-
-    setPersons(persons.concat(newPerson))
-    setNewName('')
-    setNewMobile('')
+    PersonService
+      .create(newPerson)
+      .then(returnedNote => {
+        setPersons(persons.concat(returnedNote))
+        setNewName('')
+        setNewMobile('')
+      })
   }
 
   const handleNameChange = (event) => {
