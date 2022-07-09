@@ -4,13 +4,16 @@ import AddPersonForm from './components/AddPersonForm'
 import QueryField from './components/QueryField'
 import axios from 'axios'
 import PersonService from './service/persons'
-
+import Notification from './components/Notification'
+import './index.css'
 
 const App = () => {
   const [persons, setPersons] = useState([])
   const [newName, setNewName] = useState('')
   const [newMobile, setNewMobile] = useState('')
   const [query, setQuery] = useState('')
+  const [notificationMessage, setNotificationMessage] = useState('')
+
 
   useEffect(() => {
     console.log('effect')
@@ -37,6 +40,7 @@ const App = () => {
         .update(oldPerson.id, changedPerson)
         .then(returnedPerson => {
           setPersons(persons.map(person => person.id !== oldPerson.id ? person : returnedPerson))
+          setNotificationMessage(`The phone number of ${changedPerson.name} was updated with ${changedPerson.mobile}`)
           setNewName('')
           setNewMobile('')
         })
@@ -48,6 +52,7 @@ const App = () => {
       .create(newPerson)
       .then(returnedNote => {
         setPersons(persons.concat(returnedNote))
+        setNotificationMessage(`${newPerson.name} was added with the number: ${newPerson.mobile}` )
         setNewName('')
         setNewMobile('')
       })
@@ -87,12 +92,12 @@ const App = () => {
   const removePerson = (id) => {
     console.log(`Try delete person with ${id}.`)
     const person = persons.find(n => n.id === id)
-    //const changedNote = { ...persons, important: !note.important }
+
 
     PersonService
       .remove(id)
       .then(returnedNote => {console.log(returnedNote)
-        //setPersons(persons.concat(returnedNote))
+        setNotificationMessage(`${person.name} was removed` )
         setPersons(persons.filter(n => n.id !== id))
       }).catch(error => {
       alert(
@@ -105,6 +110,7 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
+      <Notification message={notificationMessage} setMessage={setNotificationMessage}/>
       <QueryField query={query} handleQuery={handleQuery}/>
       <h2>Add a New Person</h2>
       <AddPersonForm 
